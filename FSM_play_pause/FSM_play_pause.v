@@ -2,14 +2,14 @@
  * Máquina de estados para gerenciar se o player está tocando ou pausado.
  *  
  *  @input clk: sinal de clock.
- *  @input ent: entrada (botão que será apertado pelo usuário).
+ *  @input btn: entrada (botão que será apertado pelo usuário).
  *  @input reset: reset assíncrono do estado (volta para pause).
  *  @output saida: 1 caso play, 0 caso pause.
  *
 **/
 module FSM_play_pause (
   input clk,
-  input ent,
+  input btn,
   input reset,
   output reg saida
 );
@@ -29,10 +29,10 @@ module FSM_play_pause (
     if (reset == 1'b1) state <= pause_e;
     else begin
       case (state)
-        pause_e: if (ent == 1'b1) state <= play_m;
-        play_m:  if (ent == 1'b0) state <= play_e;
-        play_e: if (ent == 1'b1) state <= pause_m;
-        pause_m: if (ent == 1'b0) state <= pause_e;
+        pause_e: if (btn == 1'b1) state <= play_m;
+        play_m:  if (btn == 1'b0) state <= play_e;
+        play_e: if (btn == 1'b1) state <= pause_m;
+        pause_m: if (btn == 1'b0) state <= pause_e;
       endcase
     end
   end
