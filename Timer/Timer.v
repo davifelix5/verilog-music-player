@@ -42,7 +42,7 @@ module Timer (
   end
 
   /* Contagem do dígito s0, com o clock do input */
-  always @(posedge clk, count) begin
+  always @(posedge clk) begin
     if (count == 1'b1) begin
       seconds0 = seconds0 + 4'b1;
       /* Volta para 0 quando passa do 9 */
@@ -52,7 +52,7 @@ module Timer (
   end
 
   /* Contagem do dígito s0 */
-  always @(posedge clk_s1, count) begin
+  always @(posedge clk_s1) begin
     if (count == 1'b1) begin
       seconds1 = seconds1 + 4'b1;
       /* Volta para 0 quando passa do 5 */
@@ -61,7 +61,7 @@ module Timer (
     end
   end
 
-  always @(posedge clk_m0, count) begin 
+  always @(posedge clk_m0) begin 
     if (count == 1'b1) minutes0 = minutes0 + 4'b1;
   end
 
