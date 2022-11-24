@@ -5,9 +5,11 @@ module Timer_testbench;
   reg count_tb, 
        reset_tb, 
        clk_tb;
+  
+  reg[5:0] adder_tb;
 
   /* Inicialização da variáveis de output */
-  wire[3:0] seconds0_tb, 
+  wire[5:0] seconds0_tb, 
            seconds1_tb, 
            minutes0_tb;
 
@@ -16,6 +18,7 @@ module Timer_testbench;
     .reset(reset_tb),
     .count(count_tb),
     .clk(clk_tb),
+    .adder(adder_tb),
     .seconds0(seconds0_tb),
     .seconds1(seconds1_tb),
     .minutes0(minutes0_tb)
@@ -26,6 +29,7 @@ module Timer_testbench;
     clk_tb = 1'b0;
     reset_tb = 0'b0;
     count_tb = 1'b1;
+    adder_tb = 6'b1;
 
     $monitor("%d : %d %d", minutes0_tb, seconds1_tb, seconds0_tb);
 
@@ -46,8 +50,19 @@ module Timer_testbench;
     #5
     reset_tb = 1'b0;
 
+    /* Timer rodando de 8 em 8 segundos */
+    #1000
+    $display("Setting adder = 8");
+    adder_tb = 6'b1000;
+    #500
+    $display("Setting adder = 15");
+    adder_tb = 6'b1111;
+    #500
+    $display("Setting adder = 1");
+    adder_tb = 6'b1;
+
     /* O timer continua por mais um tempo até parar */
-    #100
+    #500
     $stop;
 
   end

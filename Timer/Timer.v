@@ -14,57 +14,61 @@ module Timer (
   input wire reset,
   input wire count,
   input wire clk,
-  output reg[3:0] seconds0,
-  output reg[3:0] seconds1,
-  output reg[3:0] minutes0
+  input wire[5:0] adder,
+  output reg[5:0] seconds0,
+  output reg[5:0] seconds1,
+  output reg[5:0] minutes0
 );
 
   wire clk_s1, // Clock para a contagem do dítito s1
        clk_m0; // Clock para contagem do dígito s0
 
   /* Deve ser 1 apenas quando s0 = 1010, gerando uma borda de subida */
-  assign clk_s1 = seconds0[3] & seconds0[1];
+  assign clk_s1 = seconds0 > 6'b1001;
   /* Deve ser 1 apenas quando s1 = 0110, gerando uma borda de subida */
   assign clk_m0 = seconds1[2] & seconds1[1];
 
   /* Estado incial do contador */
   initial begin
-    seconds0 = 4'b0;
-    seconds1 = 4'b0;
-    minutes0 = 4'b0;
+    seconds0 = 6'b0;
+    seconds1 = 6'b0;
+    minutes0 = 6'b0;
   end
 
   /* Procedimento de reset */
 
   /* Contagem do dígito s0, com o clock do input */
   always @(posedge clk, posedge reset) begin
-    if (reset == 1'b1) seconds0 = 4'b0; // Zera o timer de acordo com a entrada de reset
+    if (reset == 1'b1) seconds0 = 6'b0; // Zera o timer de acordo com a entrada de reset
     else begin
       if (count == 1'b1) begin
-        seconds0 = seconds0 + 4'b1;
-        /* Volta para 0 quando passa do 9 */
-        if (seconds0 == 4'b1010)
-          seconds0 <= 4'b0; // Atribuição não bloqueável permite a subido do clk_s1
+        seconds0 = seconds0 + adder;
+        /* Volta para 0 quando passa do 9: atribuição não bloqueável permite a subida do clk_s1 */
+        if (seconds0 >= 6'b1010)
+          seconds0 <= seconds0 % 6'b1010;
       end
      end
   end
 
   /* Contagem do dígito s0 */
   always @(posedge clk_s1, posedge reset) begin
-    if (reset == 1'b1) seconds1 = 4'b0; // Zera o timer de acordo com a entrada de reset
+    if (reset == 1'b1) seconds1 = 6'b0; // Zera o timer de acordo com a entrada de reset
     else begin
       if (count == 1'b1) begin
-        seconds1 = seconds1 + 4'b1;
+        if (seconds0 >= 6'b1010)
+          seconds1 = seconds1 + (seconds0 / 10);
+        else
+          seconds1 = seconds1 + 6'b1;
         /* Volta para 0 quando passa do 5 */
-        if (seconds1 == 4'b0110)
-          seconds1 <= 4'b0; // Atribuição não bloqueável permite a subido do clk_m0
+        if (seconds1 == 6'b0110)
+          seconds1 <= 6'b0; // Atribuição não bloqueável permite a subido do clk_m0
       end
      end
   end
 
   always @(posedge clk_m0, posedge reset) begin 
-    if (reset == 1'b1) minutes0 = 4'b0; // Zera o timer de acordo com a entrada de reset
-    else if (count == 1'b1) minutes0 = minutes0 + 4'b1;
+    if (reset == 1'b1) minutes0 = 6'b0; // Zera o timer de acordo com a entrada de reset
+    else if (count == 1'b1) minutes0 = minutes0 + 6'b1;
   end
 
 
