@@ -16,15 +16,18 @@ module FSM_play_pause (
 
   reg[0:1] state;
 
+  /* Codificação dos estados */
   parameter pause_m = 2'b00,
             pause_e = 2'b01,
             play_e = 2'b10,
             play_m = 2'b11;
   
+  /* Configuração do estado inicial */  
   initial begin
     state <= pause_e;
   end
 
+  /* Circuito sequencial para mudança de estado junto com a função de próximo estado (Diagrama 1)*/ 
   always @(posedge clk, reset) begin
     if (reset == 1'b1) state <= pause_e;
     else begin
@@ -37,6 +40,7 @@ module FSM_play_pause (
     end
   end
 
+  /* Circutio combinatório para avaliar a saída */
   always @(state) begin 
     case (state)
       play_e, play_m: saida = 1'b1;
