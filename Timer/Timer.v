@@ -35,34 +35,36 @@ module Timer (
   end
 
   /* Procedimento de reset */
-  always @(posedge reset) begin
-    seconds0 = 4'b0;
-    seconds1 = 4'b0;
-    minutes0 = 4'b0;
-  end
 
   /* Contagem do dígito s0, com o clock do input */
-  always @(posedge clk) begin
-    if (count == 1'b1) begin
-      seconds0 = seconds0 + 4'b1;
-      /* Volta para 0 quando passa do 9 */
-      if (seconds0 == 4'b1010)
-        seconds0 <= 4'b0; // Atribuição não bloqueável permite a subido do clk_s1
-    end
+  always @(posedge clk, posedge reset) begin
+    if (reset == 1'b1) seconds0 = 4'b0; // Zera o timer de acordo com a entrada de reset
+    else begin
+      if (count == 1'b1) begin
+        seconds0 = seconds0 + 4'b1;
+        /* Volta para 0 quando passa do 9 */
+        if (seconds0 == 4'b1010)
+          seconds0 <= 4'b0; // Atribuição não bloqueável permite a subido do clk_s1
+      end
+     end
   end
 
   /* Contagem do dígito s0 */
-  always @(posedge clk_s1) begin
-    if (count == 1'b1) begin
-      seconds1 = seconds1 + 4'b1;
-      /* Volta para 0 quando passa do 5 */
-      if (seconds1 == 4'b0110)
-        seconds1 <= 4'b0; // Atribuição não bloqueável permite a subido do clk_m0
-    end
+  always @(posedge clk_s1, posedge reset) begin
+    if (reset == 1'b1) seconds1 = 4'b0; // Zera o timer de acordo com a entrada de reset
+    else begin
+      if (count == 1'b1) begin
+        seconds1 = seconds1 + 4'b1;
+        /* Volta para 0 quando passa do 5 */
+        if (seconds1 == 4'b0110)
+          seconds1 <= 4'b0; // Atribuição não bloqueável permite a subido do clk_m0
+      end
+     end
   end
 
-  always @(posedge clk_m0) begin 
-    if (count == 1'b1) minutes0 = minutes0 + 4'b1;
+  always @(posedge clk_m0, posedge reset) begin 
+    if (reset == 1'b1) minutes0 = 4'b0; // Zera o timer de acordo com a entrada de reset
+    else if (count == 1'b1) minutes0 = minutes0 + 4'b1;
   end
 
 

@@ -24,7 +24,7 @@ module Timer_testbench;
   initial begin 
     /* Condições inciais */
     clk_tb = 1'b0;
-    reset_tb = 1'b1;
+    reset_tb = 0'b0;
     count_tb = 1'b1;
 
     $monitor("%d : %d %d", minutes0_tb, seconds1_tb, seconds0_tb);
@@ -32,15 +32,22 @@ module Timer_testbench;
     /* Depois de um tempo, seta o count para 0, o timer deve parar de passar */
     #1000
     $display("Setting count = 0");
-    count_tb = 0;
+    count_tb = 1'b0;
 
     /* Depois de mais um tempo, o count deve voltar a funcionar */
     #1000
     $display("Setting count = 1");
-    count_tb = 1;
+    count_tb = 1'b1;
+
+    /* Resetando a contagem */
+    #300
+    $display("Setting reset = 1");
+    reset_tb = 1'b1;
+    #5
+    reset_tb = 1'b0;
 
     /* O timer continua por mais um tempo até parar */
-    #300
+    #100
     $stop;
 
   end
