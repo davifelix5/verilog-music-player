@@ -30,17 +30,17 @@ module Timer_testbench;
     $monitor("%d : %d %d", minutes0_tb, seconds1_tb, seconds0_tb);
 
     /* Depois de um tempo, seta o count para 0, o timer deve parar de passar */
-    #1000 
+    #1000
     $display("Setting count = 0");
     count_tb = 0;
 
     /* Depois de mais um tempo, o count deve voltar a funcionar */
-    #1000 
+    #1000
     $display("Setting count = 1");
     count_tb = 1;
 
     /* O timer continua por mais um tempo até parar */
-    #10000
+    #300
     $stop;
 
   end
