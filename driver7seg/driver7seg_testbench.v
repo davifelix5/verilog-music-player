@@ -1,6 +1,6 @@
 module driver7seg_testbench;
 
-  reg [5:0] b;
+  reg [3:0] b;
   wire [6:0] d;
 
   integer i = 0, errors;

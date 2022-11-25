@@ -28,15 +28,15 @@ module Timer_testbench;
 
   /* Teste para o driver do display de 7 segmentos */
   driver7seg driver_s0 (
-    .b(seconds0_tb),
+    .b(seconds0_tb[3:0]),
     .d(s0_7seg)
   );
   driver7seg driver_s1 (
-    .b(seconds1_tb),
+    .b(seconds1_tb[3:0]),
     .d(s1_7seg)
   );
   driver7seg driver_m0 (
-    .b(minutes0_tb),
+    .b(minutes0_tb[3:0]),
     .d(m0_7seg)
   );
 
