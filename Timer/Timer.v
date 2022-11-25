@@ -35,17 +35,16 @@ module Timer (
     minutes0 = 6'b0;
   end
 
-  /* Procedimento de reset */
-
   /* Contagem do dígito s0, com o clock do input */
   always @(posedge clk, posedge reset) begin
     if (reset == 1'b1) seconds0 = 6'b0; // Zera o timer de acordo com a entrada de reset
     else begin
       if (count == 1'b1) begin
         seconds0 = seconds0 + adder;
-        /* Volta para 0 quando passa do 9: atribuição não bloqueável permite a subida do clk_s1 */
+        
+        /* Um valor maior que 9 indica que apenas o último dígito deve ser mantido em seconds0 */
         if (seconds0 >= 6'b1010)
-          seconds0 <= seconds0 % 6'b1010;
+          seconds0 <= seconds0 % 6'b1010; // Resto da divisão por 10 pega o dígito menos significativo
       end
      end
   end
@@ -55,10 +54,8 @@ module Timer (
     if (reset == 1'b1) seconds1 = 6'b0; // Zera o timer de acordo com a entrada de reset
     else begin
       if (count == 1'b1) begin
-        if (seconds0 >= 6'b1010)
-          seconds1 = seconds1 + (seconds0 / 10);
-        else
-          seconds1 = seconds1 + 6'b1;
+        seconds1 = seconds1 + (seconds0 / 10); // Divisão por 10 pega o dígita mais significativo
+        
         /* Volta para 0 quando passa do 5 */
         if (seconds1 == 6'b0110)
           seconds1 <= 6'b0; // Atribuição não bloqueável permite a subido do clk_m0
