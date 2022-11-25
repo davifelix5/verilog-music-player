@@ -13,6 +13,8 @@ module Timer_testbench;
            seconds1_tb, 
            minutes0_tb;
 
+  wire[6:0] s0_7seg, s1_7seg, m0_7seg;
+
   /* Inicialização do módulo a ser testado */
   Timer UUT (
     .reset(reset_tb),
@@ -24,6 +26,20 @@ module Timer_testbench;
     .minutes0(minutes0_tb)
   );
 
+  /* Teste para o driver do display de 7 segmentos */
+  driver7seg driver_s0 (
+    .b(seconds0_tb),
+    .d(s0_7seg)
+  );
+  driver7seg driver_s1 (
+    .b(seconds1_tb),
+    .d(s1_7seg)
+  );
+  driver7seg driver_m0 (
+    .b(minutes0_tb),
+    .d(m0_7seg)
+  );
+
   initial begin 
     /* Condições inciais */
     clk_tb = 1'b0;
@@ -31,7 +47,7 @@ module Timer_testbench;
     count_tb = 1'b1;
     adder_tb = 6'b1;
 
-    $monitor("%d : %d %d", minutes0_tb, seconds1_tb, seconds0_tb);
+    $monitor("%d : %d %d -> %b %b %b", minutes0_tb, seconds1_tb, seconds0_tb, m0_7seg, s1_7seg, s0_7seg);
 
     /* Depois de um tempo, seta o count para 0, o timer deve parar de passar */
     #1000
