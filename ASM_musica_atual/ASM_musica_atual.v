@@ -61,9 +61,7 @@ module ASM_musica_atual (
         end
           
         prox_m: begin
-          if (prox == 1'b1)
-            state <= prox_m;
-          else
+          if (prox == 1'b0)
             state <= passa;
         end
 
@@ -78,9 +76,7 @@ module ASM_musica_atual (
         end
 
         prev_m: begin
-          if (prev == 1'b1)
-            state <= prev_m;
-          else
+          if (prev == 1'b0)
             state <= volta;
         end
 
