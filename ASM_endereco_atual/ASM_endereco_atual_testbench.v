@@ -1,12 +1,14 @@
 `timescale 1ns/100ps
 module ASM_endereco_atual_testbench;
 
-  reg passa_10s_tb, volta_10s_tb, count_tb, reset_tb, clk_tb;
+  reg passa_10s_tb, volta_10s_tb, passa_30s_tb, volta_30s_tb, count_tb, reset_tb, clk_tb;
   wire[21:0] endereco_tb;
 
   ASM_endereco_atual UUT (
     .passa_10s(passa_10s_tb),
     .volta_10s(volta_10s_tb),
+    .passa_30s(passa_30s_tb),
+    .volta_30s(volta_30s_tb),
     .count(count_tb),
     .reset(reset_tb),
     .clk(clk_tb),
@@ -49,8 +51,23 @@ module ASM_endereco_atual_testbench;
 
     #1000
     #100 volta_10s_tb = 1'b1;
-    #100 volta_10s_tb = 0'b0;
+    #100 volta_10s_tb = 1'b0;
     $display("Pressed -10s button (must not change)"); 
+
+    #1000
+    #100 passa_30s_tb =1'b1;
+    #100 passa_30s_tb = 1'b0;
+    $display("Pressed +30s button");
+
+    #1000
+    #100 volta_30s_tb =1'b1;
+    #100 volta_30s_tb = 1'b0;
+    $display("Pressed -30s button");
+
+    #1000
+    #100 volta_30s_tb =1'b1;
+    #100 volta_30s_tb = 1'b0;
+    $display("Pressed -30s button (must not change)");
 
     #1000
     $stop;
