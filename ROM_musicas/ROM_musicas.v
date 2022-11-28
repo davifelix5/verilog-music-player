@@ -8,7 +8,7 @@ module ROM_musicas(
   reg[7:0] mem[0: max_addr]; // Array de 2^24 paralavras de 8 bits
 
   initial begin
-    $readmemb("musics.dat", mem); // Inicializa a memória com um arquivo
+    $readmemb("musics2.dat", mem, 0, max_addr); // Inicializa a memória com um arquivo
   end
 
   assign data = mem[addr]; // Retorna o elemento da memória no endereço addr
