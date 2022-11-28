@@ -13,6 +13,7 @@
 module ASM_musica_atual (
   input wire prox,
   input wire prev,
+  input wire force_prox,
   input wire reset,
   input wire clk,
   output reg[0:1] select,
@@ -53,7 +54,9 @@ module ASM_musica_atual (
       case (state) 
 
         inicio: begin
-          if (prev == 1'b1)
+          if (force_prox == 1'b1)
+            state <= passa;
+          else if (prev == 1'b1)
             state <= prev_m;
           else if (prox == 1'b1)
             state <= prox_m;

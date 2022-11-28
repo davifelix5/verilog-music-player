@@ -1,7 +1,7 @@
 `timescale 1ns/100ps
 module ASM_musica_atual_testbench;
 
-  reg prox_tb, prev_tb, clk_tb, reset_tb;
+  reg prox_tb, prev_tb, clk_tb, reset_tb, force_prox_tb;
   wire[1:0] select_tb;
   wire start_tb;
   integer errors;
@@ -9,6 +9,7 @@ module ASM_musica_atual_testbench;
   ASM_musica_atual UUT (
     .prox(prox_tb),
     .prev(prev_tb),
+    .force_prox(force_prox_tb),
     .reset(reset_tb),
     .clk(clk_tb),
     .select(select_tb),
@@ -42,6 +43,7 @@ module ASM_musica_atual_testbench;
     prox_tb = 1'b0;
     prev_tb = 1'b0;
     reset_tb = 1'b0;
+    force_prox_tb = 1'b0;
     errors = 0;
     
     $monitor("SELECT: %b, start: %b", select_tb, start_tb); #10
@@ -66,14 +68,16 @@ module ASM_musica_atual_testbench;
     PressProx(); #100
     Check(2'b00); 
 
-    $display("Pressing next two timer an then reset");
+    $display("Pressing next two times an then reset");
     PressProx(); #100
     PressProx(); #100
     reset_tb = 1'b1; #10
     reset_tb = 1'b0; #10
     Check(2'b00);
 
-    #100 $display("There were %1d errors", errors);
+    $display("Holding force_prox = 1 for six clock pulses - should change two times");
+    force_prox_tb = 1'b1;
+    #30 force_prox_tb = 1'b0;
 
     #100
     $stop;
