@@ -30,7 +30,7 @@ module ASM_endereco_atual_testbench;
     #1000
     #100 volta_10s_tb = 1'b1;
     #100 volta_10s_tb = 0'b0;
-    $display("Pressed +10s button"); 
+    $display("Pressed -10s button"); 
     
     #1000 
     $display("Setting count = 0");
