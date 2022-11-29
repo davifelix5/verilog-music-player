@@ -14,7 +14,7 @@ module Timer (
   input wire reset,
   input wire count,
   input wire clk,
-  input wire[8:0] adder,
+  input wire signed[8:0] adder,
   output wire[3:0] seconds0,
   output wire[3:0] seconds1,
   output wire[3:0] minutes0

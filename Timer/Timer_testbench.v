@@ -6,7 +6,7 @@ module Timer_testbench;
        reset_tb, 
        clk_tb;
   
-  reg[8:0] adder_tb;
+  reg signed[8:0] adder_tb;
 
   /* Inicialização da variáveis de output */
   wire[3:0] seconds0_tb, 
