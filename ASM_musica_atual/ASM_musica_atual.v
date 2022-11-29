@@ -2,6 +2,7 @@
  * Máquina de estados para gerenciar qual música está tocando no instante atual
  *  
  *  @input clk: sinal de clock.
+ *  @input force_prox: manda para o estado de próxima música mesmo sem o botão ser apertado. 
  *  @input prox: botão para passar para a próxima música
  *  @input prev: botão para voltar para a música anterior
  *  @input reset: botão para voltar para a primeira música (síncrono)
