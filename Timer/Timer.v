@@ -36,7 +36,8 @@ module Timer (
   end
 
   /* Contagem do dígito s0, com o clock do input */
-  always @(posedge clk, posedge reset) begin
+  /* O adder pode ser settado de forma assíncrona */
+  always @(posedge clk, posedge reset, adder) begin
     if (reset == 1'b1) seconds0 = 6'b0; // Zera o timer de acordo com a entrada de reset
     else begin
       if (count == 1'b1) begin

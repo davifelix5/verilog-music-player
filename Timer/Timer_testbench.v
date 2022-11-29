@@ -47,7 +47,7 @@ module Timer_testbench;
     count_tb = 1'b1;
     adder_tb = 6'b1;
 
-    $monitor("%d : %d %d -> %b %b %b", minutes0_tb, seconds1_tb, seconds0_tb, m0_7seg, s1_7seg, s0_7seg);
+    $monitor("%d : %d : %d -> %b %b %b", minutes0_tb, seconds1_tb, seconds0_tb, m0_7seg, s1_7seg, s0_7seg);
 
     /* Depois de um tempo, seta o count para 0, o timer deve parar de passar */
     #1000
