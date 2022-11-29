@@ -31,58 +31,58 @@ module ASM_endereco_atual_testbench;
     clk_tb = 1'b0;
     current_value_tb = 8'b1011;
 
-    #1000
+    #500
     #100 passa_10s_tb = 1'b1;
     #100 passa_10s_tb = 0'b0;
     $display("Pressed +10s button"); 
 
-    #1000
+    #500
     #100 volta_10s_tb = 1'b1;
     #100 volta_10s_tb = 0'b0;
     $display("Pressed -10s button"); 
     
-    #1000 
+    #500 
     $display("Setting count = 0");
     count_tb = 1'b0;
     #500 
     $display("Setting count = 1");
     count_tb = 1'b1;
     
-    #1000
+    #500
     $display("Seeting reset = 1");
     reset_tb = 1'b1;
 
-    #1000
+    #500
     $display("Seeting reset = 0");
     reset_tb = 1'b0;
 
-    #1000
+    #500
     #100 volta_10s_tb = 1'b1;
     #100 volta_10s_tb = 1'b0;
     $display("Pressed -10s button (must not change)"); 
 
-    #1000
+    #500
     #100 passa_30s_tb =1'b1;
     #100 passa_30s_tb = 1'b0;
     $display("Pressed +30s button");
 
-    #1000
+    #500
     #100 volta_30s_tb =1'b1;
     #100 volta_30s_tb = 1'b0;
     $display("Pressed -30s button");
 
-    #1000
+    #500
     #100 volta_30s_tb =1'b1;
     #100 volta_30s_tb = 1'b0;
     $display("Pressed -30s button (must not change)");
 
-    #1000
+    #500
     $display("Setting o valor PCM atual para 0 (addr must reset)");
     current_value_tb = 8'b0;
     #500 current_value_tb = 8'b1011;
     $display("Serring current value to something != 0");
 
-    #1000
+    #500
     $stop;
   end
 
