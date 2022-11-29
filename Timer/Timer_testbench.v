@@ -6,10 +6,10 @@ module Timer_testbench;
        reset_tb, 
        clk_tb;
   
-  reg[5:0] adder_tb;
+  reg[8:0] adder_tb;
 
   /* Inicialização da variáveis de output */
-  wire[5:0] seconds0_tb, 
+  wire[3:0] seconds0_tb, 
            seconds1_tb, 
            minutes0_tb;
 
@@ -28,15 +28,16 @@ module Timer_testbench;
 
   /* Teste para o driver do display de 7 segmentos */
   driver7seg driver_s0 (
-    .b(seconds0_tb[3:0]),
+    .b(seconds0_tb),
     .d(s0_7seg)
   );
   driver7seg driver_s1 (
-    .b(seconds1_tb[3:0]),
+    .b(seconds1_tb),
     .d(s1_7seg)
   );
+
   driver7seg driver_m0 (
-    .b(minutes0_tb[3:0]),
+    .b(minutes0_tb),
     .d(m0_7seg)
   );
 
@@ -45,9 +46,9 @@ module Timer_testbench;
     clk_tb = 1'b0;
     reset_tb = 0'b0;
     count_tb = 1'b1;
-    adder_tb = 6'b1;
+    adder_tb = 9'b1;
 
-    $monitor("%d : %d : %d -> %b %b %b", minutes0_tb, seconds1_tb, seconds0_tb, m0_7seg, s1_7seg, s0_7seg);
+    $monitor("%d : %d %d -> %b %b %b", minutes0_tb, seconds1_tb, seconds0_tb, m0_7seg, s1_7seg, s0_7seg);
 
     /* Depois de um tempo, seta o count para 0, o timer deve parar de passar */
     #1000
@@ -69,13 +70,25 @@ module Timer_testbench;
     /* Timer rodando de 8 em 8 segundos */
     #1000
     $display("Setting adder = 8");
-    adder_tb = 6'b1000;
+    adder_tb = 9'b1000;
     #500
     $display("Setting adder = 15");
-    adder_tb = 6'b1111;
+    adder_tb = 9'b1111;
     #500
     $display("Setting adder = 1");
-    adder_tb = 6'b1;
+    adder_tb = 9'b1;
+
+    #500
+    $display("Setting adder = -1");
+    adder_tb = -9'b1;
+
+    #500
+    $display("Setting adder = -10");
+    adder_tb = -9'd10;
+
+    #500
+    $display("Setting adder = -30");
+    adder_tb = -9'd30;
 
     /* O timer continua por mais um tempo até parar */
     #500

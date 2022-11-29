@@ -14,68 +14,36 @@ module Timer (
   input wire reset,
   input wire count,
   input wire clk,
-  input wire[5:0] adder,
-  output reg[5:0] seconds0,
-  output reg[5:0] seconds1,
-  output reg[5:0] minutes0
+  input wire[8:0] adder,
+  output wire[3:0] seconds0,
+  output wire[3:0] seconds1,
+  output wire[3:0] minutes0
 );
 
-  wire clk_s1, // Clock para a contagem do dítito s1
-       clk_m0; // Clock para contagem do dígito s0
+  reg[8:0] seconds;
 
-  /* Deve ser 1 apenas quando s0 = 1010, gerando uma borda de subida */
-  assign clk_s1 = seconds0 > 6'b1001;
-  /* Deve ser 1 apenas quando s1 = 0110, gerando uma borda de subida */
-  assign clk_m0 = seconds1[2] & seconds1[1];
+  assign minutes0 = seconds / 60;
+  assign seconds1 = (seconds % 60) / 10;
+  assign seconds0 = (seconds % 60) % 10;
 
-  /* Estado incial do contador */
   initial begin
-    seconds0 = 6'b0;
-    seconds1 = 6'b0;
-    minutes0 = 6'b0;
+    seconds = 0'b0;
   end
 
   /* Contagem do dígito s0, com o clock do input */
   /* O adder pode ser settado de forma assíncrona */
-  always @(posedge clk, posedge reset, adder) begin
-    if (reset == 1'b1) seconds0 = 6'b0; // Zera o timer de acordo com a entrada de reset
-    else begin
-      if (count == 1'b1) begin
-        seconds0 = seconds0 + adder;
-        
-        /* Um valor maior que 9 indica que apenas o último dígito deve ser mantido em seconds0 */
-        if (seconds0 >= 6'b1010)
-          /* Resto da divisão por 10 pega o dígito menos significativo */
-          seconds0 <= seconds0 % 6'b1010; // Atribuição não bloqueável permite a subida do clk_s1
-      end
-     end
+  always @(posedge clk, posedge reset) begin
+    if (reset == 1'b1)
+      seconds = 9'b0; // Zera o timer de acordo com a entrada de reset
+    else if (count == 1'b1)
+      seconds = seconds + adder;
   end
 
-  /* Contagem do dígito s0 */
-  always @(posedge clk_s1, posedge reset) begin
-    if (reset == 1'b1) seconds1 = 6'b0; // Zera o timer de acordo com a entrada de reset
-    else begin
-      if (count == 1'b1) begin
-        /* Divisão por 10 pega o dígito mais significativo */
-        seconds1 = seconds1 + (seconds0 / 10);
-
-        /* Volta para 0 quando passa do 5 */
-        if (seconds1 == 6'b0110)
-          seconds1 <= 6'b0; // Atribuição não bloqueável permite a subida do clk_m0
-      end
-     end
+  /* Passa o timer quando o adder de forma assíncrona muda para algo diferente de 1 */
+  always @(adder) begin
+    // So adiciona de forma assíncrona quando é passado um adder customizado 
+    if (adder != 1'b1)
+      seconds = seconds + adder;
   end
-
-  /* Contagem do dígito m0 */
-  always @(posedge clk_m0, posedge reset) begin 
-    if (reset == 1'b1) minutes0 = 6'b0; // Zera o timer de acordo com a entrada de reset
-    else if (count == 1'b1) begin 
-      minutes0 = minutes0 + 6'b1;
-      /* Volta para 0 quando passa de 9 */
-      if (minutes0 == 6'b1010)
-        minutes0 = 6'b0;
-    end
-  end
-
 
 endmodule

@@ -6,10 +6,10 @@ module Timer_adder_testbench;
        reset_tb, 
        clk_tb;
   
-  reg[5:0] adder_tb;
+  reg[8:0] adder_tb;
 
   /* Inicialização da variáveis de output */
-  wire[5:0] seconds0_tb, 
+  wire[3:0] seconds0_tb, 
            seconds1_tb, 
            minutes0_tb;
 
@@ -27,14 +27,14 @@ module Timer_adder_testbench;
   initial begin 
     /* Condições inciais */
     clk_tb = 1'b0;
-    reset_tb = 0'b0;
+    reset_tb = 1'b0;
     count_tb = 1'b1;
-    adder_tb = 6'b1;
+    adder_tb = 9'b1;
 
     $monitor("%d : %d %d", minutes0_tb, seconds1_tb, seconds0_tb);
 
     /* Mesmo sem clock, deve mudar o valor */
-    adder_tb = 6'd30;
+    adder_tb = 9'd30;
 
   end
 
