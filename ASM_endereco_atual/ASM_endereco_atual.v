@@ -23,7 +23,7 @@ module ASM_endereco_atual(
   input wire clk,
   output wire prox_musica,
   output reg[21:0] endereco,
-  output reg[5:0] time_adder
+  output reg signed [8:0] time_adder
 );
 
   reg[3:0] state;
@@ -51,7 +51,7 @@ module ASM_endereco_atual(
   initial begin
     state <= inicio;
     endereco = 22'b0;
-    time_adder = 6'b1;
+    time_adder = 9'b1;
   end
 
   always @(posedge clk, posedge reset) begin
@@ -67,7 +67,7 @@ module ASM_endereco_atual(
       case (state) 
 
         inicio: begin
-          time_adder = 6'b1;
+          time_adder = 9'b1;
           endereco = endereco + 22'b1;
           if (passa_10s == 1'b1)
             state <= apertou_mais_10s;
@@ -86,8 +86,10 @@ module ASM_endereco_atual(
         end
 
         soltou_menos_30s: begin
-          if (endereco >= trinta_segundos)
+          if (endereco >= trinta_segundos) begin
+            time_adder = -9'd30;
             endereco = endereco - trinta_segundos;
+          end
           state <= inicio;
         end
         
@@ -99,7 +101,7 @@ module ASM_endereco_atual(
 
         soltou_mais_30s: begin 
           if (endereco <= max_addr - trinta_segundos) begin
-            time_adder = 6'd30;
+            time_adder = 9'd30;
             endereco = endereco + trinta_segundos;
           end
           else
@@ -115,7 +117,7 @@ module ASM_endereco_atual(
 
         soltou_mais_10s: begin
           if (endereco <= max_addr - dez_segundos) begin
-            time_adder = 6'd10;
+            time_adder = 9'd10;
             endereco = endereco + dez_segundos;
           end
           else
@@ -130,8 +132,11 @@ module ASM_endereco_atual(
         end
 
         soltou_menos_10s: begin
-          if (endereco >= dez_segundos) // A música só deve voltar se for possível
+          if (endereco >= dez_segundos) begin  // A música só deve voltar se for possível
+            time_adder = -9'd10;
             endereco = endereco - dez_segundos;
+          end
+            
           state <= inicio;
         end
       endcase

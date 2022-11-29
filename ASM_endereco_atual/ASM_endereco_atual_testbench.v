@@ -3,7 +3,8 @@ module ASM_endereco_atual_testbench;
 
   reg passa_10s_tb, volta_10s_tb, passa_30s_tb, volta_30s_tb, count_tb, reset_tb, clk_tb;
   wire[21:0] endereco_tb;
-  wire[5:0] time_adder_tb;
+  wire signed[8:0] time_adder_tb;
+  wire proxima_musica;
 
   ASM_endereco_atual UUT (
     .passa_10s(passa_10s_tb),
@@ -14,7 +15,8 @@ module ASM_endereco_atual_testbench;
     .reset(reset_tb),
     .clk(clk_tb),
     .time_adder(time_adder_tb),
-    .endereco(endereco_tb)
+    .endereco(endereco_tb),
+    .prox_musica(proxima_musica)
   );
 
   initial begin
