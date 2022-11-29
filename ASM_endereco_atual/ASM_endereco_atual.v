@@ -8,9 +8,12 @@
  *  @input count: indica se a contagem deve ou não continuar.
  *  @input reset: botão para reiniciar a música (voltar a contagem para o início)
  *  @input clk: sinal de clock.
+ *  @input current_value: valor que está sendo acessado pela memória no momento.
+ *  @input current_value: valor atual da memória
  *  @output endereco: últimos 22 bits para o endereço da palavra atual da música
  *  @output prox_musica: sinal que indica quando a máquina passou a contar endereços de uma nova música
  *  @output time_adder: número que deve ser adicionado no display de tempo
+ *
  *
 **/
 module ASM_endereco_atual(
@@ -21,6 +24,7 @@ module ASM_endereco_atual(
   input wire count,
   input wire reset,
   input wire clk,
+  input wire[7:0] current_value,
   output wire prox_musica,
   output reg[21:0] endereco,
   output reg signed [8:0] time_adder
@@ -45,7 +49,8 @@ module ASM_endereco_atual(
             trinta_segundos = 30 * addrs_por_segundo,
             max_addr = {22{1'b1}}; // 2^20 - 1
   
-  assign prox_musica = endereco == max_addr; // Reseta quando chega no máximo
+  // Reseta quando chega no máximo ou quando a música acaba
+  assign prox_musica = endereco == max_addr || current_value == 8'b0;
 
   /* Estado incial da máquina */
   initial begin
