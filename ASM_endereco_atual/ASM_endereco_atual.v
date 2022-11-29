@@ -7,7 +7,7 @@
  *  @input volta_30s: botão para voltar 30 segundos da música atual
  *  @input count: indica se a contagem deve ou não continuar.
  *  @input reset: botão para reiniciar a música (voltar a contagem para o início)
- *  @input clk: sinal de clock.
+ *  @input clk: sinal de clock (deve ter 3kHz de frequência).
  *  @input current_value: valor que está sendo acessado pela memória no momento.
  *  @input current_value: valor atual da memória
  *  @output endereco: últimos 22 bits para o endereço da palavra atual da música
