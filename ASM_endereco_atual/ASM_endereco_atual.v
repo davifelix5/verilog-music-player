@@ -9,6 +9,8 @@
  *  @input reset: botão para reiniciar a música (voltar a contagem para o início)
  *  @input clk: sinal de clock.
  *  @output endereco: últimos 22 bits para o endereço da palavra atual da música
+ *  @output prox_musica: sinal que indica quando a máquina passou a contar endereços de uma nova música
+ *  @output time_adder: número que deve ser adicionado no display de tempo
  *
 **/
 module ASM_endereco_atual(
@@ -20,7 +22,8 @@ module ASM_endereco_atual(
   input wire reset,
   input wire clk,
   output wire prox_musica,
-  output reg[21:0] endereco
+  output reg[21:0] endereco,
+  output reg[5:0] time_adder
 );
 
   reg[3:0] state;
@@ -48,6 +51,7 @@ module ASM_endereco_atual(
   initial begin
     state <= inicio;
     endereco = 22'b0;
+    time_adder = 6'b1;
   end
 
   always @(posedge clk, posedge reset) begin
@@ -63,6 +67,7 @@ module ASM_endereco_atual(
       case (state) 
 
         inicio: begin
+          time_adder = 6'b1;
           endereco = endereco + 22'b1;
           if (passa_10s == 1'b1)
             state <= apertou_mais_10s;
@@ -80,7 +85,7 @@ module ASM_endereco_atual(
             state <= soltou_menos_30s;
         end
 
-        soltou_menos_30s: begin 
+        soltou_menos_30s: begin
           if (endereco >= trinta_segundos)
             endereco = endereco - trinta_segundos;
           state <= inicio;
@@ -93,8 +98,10 @@ module ASM_endereco_atual(
         end
 
         soltou_mais_30s: begin 
-          if (endereco <= max_addr - trinta_segundos)
+          if (endereco <= max_addr - trinta_segundos) begin
+            time_adder = 6'd30;
             endereco = endereco + trinta_segundos;
+          end
           else
             endereco = max_addr;
           state <= inicio;
@@ -107,8 +114,10 @@ module ASM_endereco_atual(
         end
 
         soltou_mais_10s: begin
-          if (endereco <= max_addr - dez_segundos)
+          if (endereco <= max_addr - dez_segundos) begin
+            time_adder = 6'd10;
             endereco = endereco + dez_segundos;
+          end
           else
             endereco = max_addr;
           state <= inicio;

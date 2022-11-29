@@ -3,6 +3,7 @@ module ASM_endereco_atual_testbench;
 
   reg passa_10s_tb, volta_10s_tb, passa_30s_tb, volta_30s_tb, count_tb, reset_tb, clk_tb;
   wire[21:0] endereco_tb;
+  wire[5:0] time_adder_tb;
 
   ASM_endereco_atual UUT (
     .passa_10s(passa_10s_tb),
@@ -12,11 +13,12 @@ module ASM_endereco_atual_testbench;
     .count(count_tb),
     .reset(reset_tb),
     .clk(clk_tb),
+    .time_adder(time_adder_tb),
     .endereco(endereco_tb)
   );
 
   initial begin
-    $monitor("Endereco: %d", endereco_tb);
+    $monitor("Endereco: %d; Time adder: %d", endereco_tb, time_adder_tb);
     
     passa_10s_tb = 1'b0;
     volta_10s_tb = 1'b0;
