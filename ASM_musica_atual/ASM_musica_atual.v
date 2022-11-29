@@ -46,7 +46,7 @@ module ASM_musica_atual (
     /* Estado de reset */
     if (reset == 1'b1) begin
       select = 2'b00;
-      start = 1'b1; // A música 0 irá começar a tocar
+      start <= 1'b1; // A música 0 irá começar a tocar
       state <= inicio;
     end
 
@@ -61,7 +61,7 @@ module ASM_musica_atual (
             state <= prev_m;
           else if (prox == 1'b1)
             state <= prox_m;
-          start = 1'b0; // Alguma música já está tocando
+          start <= 1'b0; // Alguma música já está tocando
         end
           
         prox_m: begin
@@ -75,7 +75,7 @@ module ASM_musica_atual (
             select = 2'b0;
           else
             select = select + 2'b1;
-          start = 1'b1; // Alguma música irá começar a tocar
+          start <= 1'b1; // Alguma música irá começar a tocar
           state <= inicio;
         end
 
@@ -90,7 +90,7 @@ module ASM_musica_atual (
             select = 2'b11;
           else
             select = select - 2'b1;
-          start = 1'b1; // Alguma música irá começar a tocar
+          start <= 1'b1; // Alguma música irá começar a tocar
           state <= inicio;
         end
 
