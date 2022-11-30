@@ -35,6 +35,15 @@ module Timer_adder_testbench;
 
     /* Mesmo sem clock, deve mudar o valor */
     adder_tb = 9'd30;
+    #100
+
+    if (seconds1_tb == 0)
+      $display("Erro, o valor não mudar");
+    else
+      $display("Teste encerrado com sucesso");
+    
+    #100
+    $stop;
 
   end
 
