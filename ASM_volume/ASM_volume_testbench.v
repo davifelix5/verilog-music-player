@@ -1,3 +1,4 @@
+`timescale 1ns/100ps
 module ASM_volume_testbench;
 
   reg aumenta_tb,
@@ -115,6 +116,6 @@ module ASM_volume_testbench;
     $stop;
   end
 
-  always #5 clk_tb = ~clk_tb;
+  always #10 clk_tb = ~clk_tb;
 
 endmodule

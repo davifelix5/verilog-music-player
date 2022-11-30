@@ -58,6 +58,6 @@ module FSM_play_pause_testbench;
   end
 
   /* Criação de um clock artificial */
-  always #5 clk_tb = ~clk_tb;
+  always #10 clk_tb = ~clk_tb;
 
 endmodule

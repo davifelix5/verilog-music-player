@@ -92,6 +92,6 @@ module Timer_testbench;
   end
 
   /* Geração de um clock */
-  always #5 clk_tb = ~clk_tb;
+  always #10 clk_tb = ~clk_tb;
 
 endmodule

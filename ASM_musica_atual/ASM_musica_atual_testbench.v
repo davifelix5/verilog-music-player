@@ -80,10 +80,13 @@ module ASM_musica_atual_testbench;
     #30 force_prox_tb = 1'b0;
 
     #100
+
+    if (errors == 0) $display("Sem erros");
+    else $display("Houve %d erros", errors);
+    
     $stop;
-  
   end
 
-  always #5 clk_tb = ~clk_tb;
+  always #10 clk_tb = ~clk_tb;
 
 endmodule
