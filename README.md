@@ -119,3 +119,5 @@ run -all
 ```
 - Simulação muito parecida com a da ROM_musicas_testbench, mas agora com menos informações no `log`, apenas o conteúdo do display e a palavra de 8 bits que está sendo acessada em cada momento.
 - Para verificar o efeito de cada alteração, também é possível verificar onde ela foi feita a partir de uma busca com `Crtrl + F`
+
+**OBS**: os termos a serem pesquisados nas simulações não automáticas são aqueles registrados com `$display` no arquivo de testbench correspondente.
