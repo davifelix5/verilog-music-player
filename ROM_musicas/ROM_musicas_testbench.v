@@ -53,7 +53,7 @@ module ROM_musicas_testbench;
   Display_select_counter UUT5(
     .mudou_volume(mudou_volume_tb),
     .display_select(select_display_tb),
-    .reset(proxima_musica_tb | start_tb),
+    .reset(proxima_musica_tb | start_tb | time_adder_tb != 9'b1),
     .clk(clk_tb)
   );
 
@@ -223,6 +223,10 @@ module ROM_musicas_testbench;
     $display("Pressed play_pause");
     #100 play_pause = 1;
     #100 play_pause = 0;
+
+    #100 passa_30s_tb = 1'b1;
+    #100 passa_30s_tb = 0'b0;
+    $display("Pressed +30s button"); 
     
 
     #15000
