@@ -3,7 +3,7 @@
 ```bash
 vlib work
 ```
-2. **Descompatar o arquivo para a simulação da memória (musics2.rar)**: esse arquivo simulará dados de músicas em PCM.
+2. **Descompatar o arquivo para a simulação da memória (musics.rar)**: esse arquivo simulará dados de músicas em PCM.
 
 # Instruções para simulação de cada módulo
 
