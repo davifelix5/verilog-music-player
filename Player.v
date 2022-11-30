@@ -35,80 +35,105 @@ module Player(
   output wire[7:0] data
 );
 
-  wire[21:0] music_addr;
-  wire[1:0] select;
-  wire[23:0] full_addr;
-  wire play, prox_musica, started_new_song;
-  wire[3:0] seconds0, seconds1, minutes0, volume0, volume1;
-  wire signed [8:0] time_adder;
+  wire[21:0] endereco; // Endereço de música genérico (sem select)
+  wire[1:0] select; // Bits de seleção da música
+  wire[23:0] full_addr; // Endereço total da música (com select)
+
+  wire proxima_musica, // Sinal para resetar o select
+       start, // Sinal para resetar o endereço da música
+       play;  // Sinal que indica se está em play ou pause
 
 
-  /* Concatena os bits de seleção com o endereço atual da música
-    para formar o endereço completo que deve ser acessado na memória */
-  assign full_addr = {select, music_addr};
+  wire signed[8:0] time_adder; // Quantida de de tempo que deve ser adicionada no relógio
 
-  /* Memória de 2^24 x 8 bits que guarda as 4 músicas esperadas */
-  ROM_musicas MEMO (
-    .addr(full_addr),
-    .data(data)
+  wire[3:0] minutes0, // Dígito mnoes significativo dos minutos
+           seconds0, // Dígito menos significativo dos segundos
+           seconds1; // Dígito mais singificativo dos seconds
+
+  wire[3:0] volume0, // Dígito menos significativo do volume 
+            volume1; // Dígito mais significativo do volume
+
+  wire select_display,  // Seleciona o que deve ser mostrado no display
+       mudou_volume,    // Indica mudança no volume
+       reset_display;   // Infica se o player deve voltar a mostrar o tempo
+
+  assign full_addr = {select, endereco}; // Endereço completo de memória
+  assign reset_display = proxima_musica | start | time_adder != 9'b1;
+
+  Display_select_counter DISPLAY_SELECT(
+    .mudou_volume(mudou_volume),
+    .display_select(select_display), 
+    .reset(reset_display), // Volta para o tempo caso tenha começado uma música nova
+    .clk(clk)
   );
 
-  /* Máquina de estados finita (Moore) que gerencia o estado de play ou pause, controlado
-    pelo sinal do botão play_pause */
-  FSM_play_pause PL_PA (
-    .clk(clk),
-    .btn(play_pause),
-    .reset(1'b0), // Por padrão, essa máquina não precisa resetar.
-    .saida(play)
+  Display SEVEN_SEG_DISPLAY(
+    .volume0(volume0),
+    .volume1(volume1),
+    .minutes0(minutes0),
+    .seconds0(seconds0),
+    .seconds1(seconds1),
+    .select(select_display),
+    .digit2(display_digit2),
+    .digit1(display_digit1),
+    .digit0(display_digit0)
   );
 
-  /* Máquina de estados algorítmica que gerencia quais são os bits de seleção da 
-    música que está tocando no momento */
-  ASM_musica_atual MUSICA_ATUAL (
-    .prox(next_song),
-    .prev(prev_song),
-    .force_prox(prox_musica), // Sinal que força a máquina para a próxima música
-    .reset(1'b0), // Por padrão, essa máquina não precisa resetar
-    .clk(clk),
-    .select(select), // Bits de seleção da música
-    .start(started_new_song) // Sinaliza quando outra música foi selecionada
-  );
-
-  /* Máquina de estados algoritmica que gerencia o endereço da música que deve ser tocado
-    no momento */
-  ASM_endereco_atual MAQ_ADDR(
-    .passa_10s(pass_10s),
-    .volta_10s(back_10s),
-    .passa_30s(pass_30s),
-    .volta_30s(back_30s),
-    .count(play), // O endereço não deve avançar se a música estivar pausada
-    .reset(started_new_song), // O endereço deve resetar caso começe outra música
-    .clk(clk),
-    .current_value(data), // Valor atual para saber quando a música acabar
-    .prox_musica(prox_musica), // Caso chegue no endereço final, a máquina sinaliza para que começe outra música
-    .time_adder(time_adder), // Fala a quantidade de tempo que deve ser adicionada no timer de acordo com a entrada
-    .endereco(music_addr) // Endereço da música (sem os bits de seleção)
-  );
-
-  /* Módulo que gerencia o timer que mostra quando tempo da música atual se passou */
-  Timer TIME(
-    .reset(prox_musica | started_new_song), // O timer deve resetar quando começa outra música
-    .count(play), // O timer deve parar de avançar se a música estiver pausada
-    .clk(clk_timer), // O timer deve avançar de 1 em 1 segundos (clock de 1 Hz)
-    .adder(time_adder), // O timer deve avançar tempos diferentes de acordo com a entrada
-    .seconds0(seconds0), // Dígito menos significativo dos segundos
-    .seconds1(seconds1), // Dígito mais significativo dos segundos
-    .minutes0(minutes0) // Dígito dos minutos
-  );
-
-  ASM_volume VOLUME (
+  ASM_volume VOLUME_MANAGEMENT (
     .aumenta(aumenta_volume),
     .diminui(diminui_volume),
     .mute(mute_btn),
     .reset(1'b0),
     .clk(clk),
-    .volume1(volume0),
-    .volume0(volume1)
+    .mudou_volume(mudou_volume),
+    .volume1(volume1),
+    .volume0(volume0)
+  );
+
+  Timer TIMER (
+    .reset(proxima_musica | start), // Deve voltar para 0 quando começa outra música
+    .count(play), // Deve passar apenas quando estiver em play
+    .clk(clk_timer),
+    .adder(time_adder), // O tempo adicionado vem da ASM de endereços
+    .seconds0(seconds0),
+    .seconds1(seconds1),
+    .minutes0(minutes0)
+  );
+
+  ROM_musicas MEM (
+    .addr(full_addr),
+    .data(data)
+  );
+
+  ASM_endereco_atual CURR_ADDR (
+    .passa_10s(pass_10s),
+    .volta_10s(back_10s),
+    .passa_30s(pass_30s),
+    .volta_30s(back_30s),
+    .count(play),
+    .reset(start),
+    .clk(clk),
+    .current_value(data),
+    .time_adder(time_adder),
+    .endereco(endereco),
+    .prox_musica(proxima_musica)
+  );
+
+  ASM_musica_atual CURR_SONG (
+    .prox(next_song),
+    .prev(prev_song),
+    .force_prox(proxima_musica),
+    .reset(1'b0),
+    .clk(clk),
+    .select(select),
+    .start(start)
+  );
+
+  FSM_play_pause PL_PA (
+     .clk(clk),
+     .btn(play_pause),
+     .reset(1'b0),
+     .saida(play)
   );
 
 
