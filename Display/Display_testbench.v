@@ -15,7 +15,8 @@ module Display_testbench;
   
   wire[6:0] digit2_tb,
             digit1_tb,
-            digit0_tb;
+            digit0_tb,
+            digit4_tb;
 
   function [4:0] decoder;
   /* Função para traduzir o valor de 7 segmentos para um número BCD (facilitar debuging) */
@@ -50,7 +51,9 @@ module Display_testbench;
     .minutes0(minutes0_tb),
     .seconds0(seconds0_tb),
     .seconds1(seconds1_tb),
+    .music(4'b01),
     .select(select_tb),
+    .digit4(digit4_tb),
     .digit2(digit2_tb),
     .digit1(digit1_tb),
     .digit0(digit0_tb)
@@ -86,7 +89,7 @@ module Display_testbench;
     clk_timer = 1'b0;
     reset_display_tb = 1'b0;
 
-    $monitor("%d %d %d %t", decoder(digit2_tb), decoder(digit1_tb), decoder(digit0_tb), $realtime);
+    $monitor("%d   %d %d %d %t",decoder(digit4_tb), decoder(digit2_tb), decoder(digit1_tb), decoder(digit0_tb), $realtime);
     
     #4000
 

@@ -9,9 +9,10 @@
  *  @input prev_song: botão para voltar para a música anterior,
  *  @input next_song: botão para adiantar para a próxima música,
  *  @input play_pause: botão para alternar entre play e pause,
- *  @output seconds_lsd: dígito menos significativo dos segundos no display,
- *  @output seconds_msd: dígito mais significativo dos segundos no display,
- *  @output minutes_digit: dígito dos minutos no display,
+ *  @output display_digit4: dígito 4 do display,
+ *  @output display_digit2: dígito 2 no display,
+ *  @output display_digit1: dígito 1 no display,
+ *  @output display_digit0: dígito 0 no display,
  *  @output data: endereço atual da música a ser tocado
  *
 */
@@ -32,6 +33,7 @@ module Player(
   output wire[6:0] display_digit0,
   output wire[6:0] display_digit1,
   output wire[6:0] display_digit2,
+  output wire[6:0] display_digit4,
   output wire[7:0] data
 );
 
@@ -73,7 +75,9 @@ module Player(
     .minutes0(minutes0),
     .seconds0(seconds0),
     .seconds1(seconds1),
+    .music({2'b00, select}),
     .select(select_display),
+    .digit4(display_digit4),
     .digit2(display_digit2),
     .digit1(display_digit1),
     .digit0(display_digit0)

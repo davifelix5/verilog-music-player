@@ -3,7 +3,7 @@ module Player_testbench;
   reg pass_30s_tb, back_30s_tb, pass_10s_tb, back_10s_tb, clk_tb, prev_song_tb, next_song_tb, play_pause_tb;
   reg clk_timer_tb, aumenta_volume_tb, diminui_volume_tb, mute_btn_tb;
 
-  wire[6:0] display_digit0_tb, display_digit1_tb, display_digit2_tb;
+  wire[6:0] display_digit0_tb, display_digit1_tb, display_digit2_tb, display_digit4_tb;
   wire[7:0] data_tb;
 
   function [4:0] decoder;
@@ -42,6 +42,7 @@ module Player_testbench;
   .display_digit0(display_digit0_tb),
   .display_digit1(display_digit1_tb),
   .display_digit2(display_digit2_tb),
+  .display_digit4(display_digit4_tb),
   .data(data_tb)
 );
 
@@ -59,7 +60,7 @@ module Player_testbench;
     diminui_volume_tb = 1'b0;
     mute_btn_tb = 1'b0;
 
-    $monitor("\n(%d:%d%d)\nData: %b;\n", decoder(display_digit2_tb), decoder(display_digit1_tb), decoder(display_digit0_tb), data_tb);
+    $monitor("\n%d (%d:%d%d)\nData: %b;\n", decoder(display_digit4_tb), decoder(display_digit2_tb), decoder(display_digit1_tb), decoder(display_digit0_tb), data_tb);
     
     $display("Pressed play_pause");
     #100 play_pause_tb = 1'b1;

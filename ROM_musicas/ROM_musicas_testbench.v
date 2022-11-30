@@ -24,7 +24,8 @@ module ROM_musicas_testbench;
   
   reg clk_timer, aumenta_tb, diminui_tb, mute_tb;
 
-  wire[6:0] digit2_tb,
+  wire[6:0] digit4_tb,
+            digit2_tb,
             digit1_tb,
             digit0_tb;
 
@@ -63,7 +64,9 @@ module ROM_musicas_testbench;
     .minutes0(minutes0_tb),
     .seconds0(seconds0_tb),
     .seconds1(seconds1_tb),
+    .music({2'b00, select_tb}),
     .select(select_display_tb),
+    .digit4(digit4_tb),
     .digit2(digit2_tb),
     .digit1(digit1_tb),
     .digit0(digit0_tb)
@@ -142,7 +145,7 @@ module ROM_musicas_testbench;
     mute_tb = 1'b0;
     clk_timer = 1'b0;
 
-    $monitor("\n(%d:%d%d) -- %d\nSELECT: %b; ADDR: %d; ADDRb: %b; Data: %b; Play: %b\n", decoder(digit2_tb), decoder(digit1_tb), decoder(digit0_tb), select_display_tb, select_tb, full_addr, endereco_tb, data_tb, play);
+    $monitor("\n%d (%d:%d%d) -- %d\nSELECT: %b; ADDR: %d; ADDRb: %b; Data: %b; Play: %b\n", decoder(digit4_tb), decoder(digit2_tb), decoder(digit1_tb), decoder(digit0_tb), select_display_tb, select_tb, full_addr, endereco_tb, data_tb, play);
     
     $display("Pressed play_pause");
     #100 play_pause = 1'b1;

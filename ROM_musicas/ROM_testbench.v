@@ -14,7 +14,7 @@ module ROM_testbench;
   input[7:0] expect;
     if (data_tb != expect) begin
       errors = errors + 1;
-      $display("Error: esperada %b e erecebeu %b", expect, data_tb);
+      $display("Error: esperada %b e recebeu %b", expect, data_tb);
     end
   endtask
 
