@@ -1,3 +1,11 @@
+/**
+ * Módulo responsável armazenar as palavras de 8 bits correspondentes às músicas
+ *  
+ *  @input addr: endereço da memória a ser acessado
+ *  @output data: dado correspondente ao endereço passado
+ *  
+**/
+
 module ROM_musicas(
   input wire[23:0] addr, // endereço a ser retornado
   output wire[7:0] data // palavra da memória

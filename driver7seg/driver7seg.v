@@ -2,7 +2,7 @@
  * Módulo responsável por gerenciar o funcionamento de um display de sete segmentos
  *  
  *  @input b: código em BCD que deve ser decodificado para um display de sete segmentos ânodo
- * positivo, ou seja, os segmentos acendem quando recebem entrada de nível lógico baixo
+ * comum, ou seja, os segmentos acendem quando recebem entrada de nível lógico baixo
  *  
  *  @output d: palavra de 7 bits que indica quais segmentos devem ser acesos. 
  *

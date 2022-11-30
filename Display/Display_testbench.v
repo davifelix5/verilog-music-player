@@ -18,6 +18,7 @@ module Display_testbench;
             digit0_tb;
 
   function [4:0] decoder;
+  /* Função para traduzir o valor de 7 segmentos para um número BCD (facilitar debuging) */
   input [6:0] code;
   begin
     case (code)

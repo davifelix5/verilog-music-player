@@ -1,5 +1,5 @@
 /**
- * Módulo responsável por gerenciar o funcionamento de um display de sete segmentos
+ * Módulo responsável por gerenciar o volume do player (apenas para visualização)
  *  
  *  @input aumenta: aumenta o volume
  *  @input diminui: diminui o volume
