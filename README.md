@@ -1,8 +1,9 @@
 # Preparação do ambiente
-1. Criação da pasta work na raiz do projeto:
+1. **Criação da pasta work na raiz do projeto**: criação da pasta de trabalho
 ```bash
 vlib work
 ```
+2. **Descompatar o arquivo para a simulação da memória (musics2.rar)**: esse arquivo simulará dados de músicas em PCM.
 
 # Instruções para simulação de cada módulo
 

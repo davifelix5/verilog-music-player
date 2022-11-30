@@ -148,7 +148,8 @@ module Player_testbench;
     $stop;
   end
 
-  always #10 clk_tb = ~clk_tb;
-  always #1000 clk_timer_tb = ~clk_timer_tb;
+  /* Para alcançar os clocks esperados, serão feitos contadores */
+  always #10 clk_tb = ~clk_tb; // Para rodar na placa, será um clock de 3kHz
+  always #1000 clk_timer_tb = ~clk_timer_tb; // Para rodar na placa, será um clock de 1hz
 
 endmodule
