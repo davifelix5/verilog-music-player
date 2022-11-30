@@ -172,10 +172,10 @@ module ROM_musicas_testbench;
     aumenta_tb = 1'b0;
     #100
 
-    aumenta_tb = 1'b1;
+    diminui_tb = 1'b1;
     #500
     $display("Diminuindo");
-    aumenta_tb = 1'b0;
+    diminui_tb = 1'b0;
 
     #100 passa_30s_tb = 1'b1;
     #100 passa_30s_tb = 0'b0;
