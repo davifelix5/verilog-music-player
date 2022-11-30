@@ -4,14 +4,13 @@ module ROM_musicas_testbench;
   reg passa_10s_tb, volta_10s_tb, passa_30s_tb, volta_30s_tb, clk_tb, prox_tb, prev_tb, play_pause;
 
   wire[7:0] data_tb; // Palavra atual da memória
-
   wire[21:0] endereco_tb; // Endereço de música genérico (sem select)
   wire[1:0] select_tb; // Bits de seleção da música
   wire[23:0] full_addr; // Endereço total da música (com select)
 
-  wire proxima_musica_tb, // Sinal para resetar o select
-       start_tb, // Sinal para resetar o endereço da música
-       play;  // Sinal que indica se está em play ou pause
+  wire start_tb, // Sinal para resetar o endereço da música
+       play,
+       prox_musica_tb;  // Sinal que indica se está em play ou pause
 
 
   wire signed[8:0] time_adder_tb;
@@ -30,6 +29,8 @@ module ROM_musicas_testbench;
             digit0_tb;
 
   wire select_display_tb, mudou_volume_tb;
+
+  assign prox_musica_tb = endereco_tb == {22{1'b1}} | data_tb == 8'b0;
 
   function [4:0] decoder;
   /* Função para traduzir o valor de 7 segmentos para um número BCD (facilitar debuging) */
@@ -54,7 +55,7 @@ module ROM_musicas_testbench;
   Display_select_counter UUT5(
     .mudou_volume(mudou_volume_tb),
     .display_select(select_display_tb),
-    .reset(proxima_musica_tb | start_tb | time_adder_tb != 9'b1),
+    .reset(start_tb | time_adder_tb != 9'b1),
     .clk(clk_tb)
   );
 
@@ -84,7 +85,7 @@ module ROM_musicas_testbench;
   );
 
   Timer UUT8 (
-    .reset(proxima_musica_tb | start_tb), // Deve integrar com o início de uma próxima música
+    .reset(start_tb), // Deve integrar com o início de uma próxima música
     .count(play), // Deve integrar com play/pause
     .clk(clk_timer),
     .adder(time_adder_tb), // Deve integrar com a máquina de endereços
@@ -106,16 +107,14 @@ module ROM_musicas_testbench;
     .count(play),
     .reset(start_tb),
     .clk(clk_tb),
-    .current_value(data_tb),
     .time_adder(time_adder_tb),
-    .endereco(endereco_tb),
-    .prox_musica(proxima_musica_tb)
+    .endereco(endereco_tb)
   );
 
   ASM_musica_atual UUT3 (
     .prox(prox_tb),
     .prev(prev_tb),
-    .force_prox(proxima_musica_tb),
+    .force_prox(prox_musica_tb),
     .reset(1'b0),
     .clk(clk_tb),
     .select(select_tb),
@@ -145,7 +144,7 @@ module ROM_musicas_testbench;
     mute_tb = 1'b0;
     clk_timer = 1'b0;
 
-    $monitor("\n%d (%d:%d%d) -- %d\nSELECT: %b; ADDR: %d; ADDRb: %b; Data: %b; Play: %b\n", decoder(digit4_tb), decoder(digit2_tb), decoder(digit1_tb), decoder(digit0_tb), select_display_tb, select_tb, full_addr, endereco_tb, data_tb, play);
+    $monitor("\nProx: %d -- %d (%d:%d%d) -- %d\nSELECT: %b; ADDR: %d; ADDRb: %b; Data: %b; Play: %b\n", prox_musica_tb ,decoder(digit4_tb), decoder(digit2_tb), decoder(digit1_tb), decoder(digit0_tb), select_display_tb, select_tb, full_addr, endereco_tb, data_tb, play);
     
     $display("Pressed play_pause");
     #100 play_pause = 1'b1;

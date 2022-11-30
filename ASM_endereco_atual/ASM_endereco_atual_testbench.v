@@ -5,7 +5,6 @@ module ASM_endereco_atual_testbench;
   reg[7:0] current_value_tb;
   wire[21:0] endereco_tb;
   wire signed[8:0] time_adder_tb;
-  wire proxima_musica_tb;
 
   ASM_endereco_atual UUT (
     .passa_10s(passa_10s_tb),
@@ -16,13 +15,11 @@ module ASM_endereco_atual_testbench;
     .reset(reset_tb),
     .clk(clk_tb),
     .time_adder(time_adder_tb),
-    .endereco(endereco_tb),
-    .prox_musica(proxima_musica_tb),
-    .current_value(current_value_tb)
+    .endereco(endereco_tb)
   );
 
   initial begin
-    $monitor("Endereco: %d; Time adder: %d; Prox song: %d", endereco_tb, time_adder_tb, proxima_musica_tb);
+    $monitor("Endereco: %d; Time adder: %d;", endereco_tb, time_adder_tb);
     
     passa_10s_tb = 1'b0;
     volta_10s_tb = 1'b0;

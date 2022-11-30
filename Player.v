@@ -59,8 +59,11 @@ module Player(
        mudou_volume,    // Indica mudança no volume
        reset_display;   // Infica se o player deve voltar a mostrar o tempo
 
+  parameter max_addr = {22{1'b1}}; // 2^22 - 1
+
   assign full_addr = {select, endereco}; // Endereço completo de memória
-  assign reset_display = proxima_musica | start | time_adder != 9'b1;
+  assign reset_display = start | time_adder != 9'b1;
+  assign proxima_musica = endereco == max_addr | data == 8'b0;
 
   Display_select_counter DISPLAY_SELECT(
     .mudou_volume(mudou_volume),
@@ -95,7 +98,7 @@ module Player(
   );
 
   Timer TIMER (
-    .reset(proxima_musica | start), // Deve voltar para 0 quando começa outra música
+    .reset(start), // Deve voltar para 0 quando começa outra música
     .count(play), // Deve passar apenas quando estiver em play
     .clk(clk_timer),
     .adder(time_adder), // O tempo adicionado vem da ASM de endereços
@@ -117,10 +120,8 @@ module Player(
     .count(play),
     .reset(start),
     .clk(clk),
-    .current_value(data),
     .time_adder(time_adder),
-    .endereco(endereco),
-    .prox_musica(proxima_musica)
+    .endereco(endereco)
   );
 
   ASM_musica_atual CURR_SONG (

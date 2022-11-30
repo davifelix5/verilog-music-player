@@ -71,11 +71,11 @@ module ASM_musica_atual (
 
         passa: begin
           /* Select volta para o início ao passar para uma música inexistente */
+          start <= 1'b1; // Alguma música irá começar a tocar
           if (select == QTD_MUSICAS)
             select = 2'b0;
           else
             select = select + 2'b1;
-          start <= 1'b1; // Alguma música irá começar a tocar
           state <= inicio;
         end
 
@@ -85,12 +85,12 @@ module ASM_musica_atual (
         end
 
         volta: begin
+          start <= 1'b1; // Alguma música irá começar a tocar
           /* Select vai para a última música ao voltar para música inexistente */
           if (select == 2'b0)
             select = 2'b11;
           else
             select = select - 2'b1;
-          start <= 1'b1; // Alguma música irá começar a tocar
           state <= inicio;
         end
 
