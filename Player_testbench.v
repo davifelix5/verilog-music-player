@@ -74,7 +74,7 @@ module Player_testbench;
      #100
     aumenta_volume_tb = 1'b1;
     #500
-    $display("Aumentando");
+    $display("Aumentando (o tempo deve dar lugar ao volume no display)");
     aumenta_volume_tb = 1'b0;
 
     #100
@@ -97,7 +97,7 @@ module Player_testbench;
 
     #100 pass_30s_tb = 1'b1;
     #100 pass_30s_tb = 0'b0;
-    $display("Pressed +30s button"); 
+    $display("Pressed +30s button (o volume deve dar lugar ao tempo no display)"); 
 
     #500
     #100 back_30s_tb =1'b1;
